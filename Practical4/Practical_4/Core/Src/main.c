@@ -24,6 +24,11 @@
 #include <stdio.h>
 #include "stm32f4xx.h"
 #include "lcd_stm32f4.h"
+#include "stm32f4xx_hal.h"
+/* USER CODE END Includes */
+#include <string.h>
+#include <stdlib.h>
+/* Private includes
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,7 +71,8 @@ uint32_t Drum_LUT = {};
 // TODO: Equation to calculate TIM2_Ticks
 uint32_t TIM2_Ticks = 0; // How often to write new LUT value
 uint32_t DestAddress = (uint32_t) &(TIM3->CCR3); // Write LUT TO TIM3->CCR3 to modify PWM duty cycle
-
+UART_HandleTypeDef huart1;
+DMA_HandleTypeDef hdma_tim2_ch1;
 
 /* USER CODE END PV */
 
@@ -76,6 +82,7 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 void EXTI0_IRQHandler(void);
 /* USER CODE END PFP */
@@ -117,29 +124,40 @@ int main(void)
   MX_DMA_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
+  //MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  // TODO: Start TIM3 in PWM mode on channel 3
-
-  // TODO: Start TIM2 in Output Compare (OC) mode on channel 1
-
-  // TODO: Start DMA in IT mode on TIM2->CH1. Source is LUT and Dest is TIM3->CCR3; start with Sine LUT
-
-  // TODO: Write current waveform to LCD(Sine is the first waveform)
-
-  // TODO: Enable DMA (start transfer from LUT to CCR)
+  init_LCD();
+  lcd_command(CLEAR);
+  lcd_putstring("this is a test");
 
   /* USER CODE END 2 */
-
+  char message[] = "Hi\r\n";
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
+
+void MX_USART2_UART_Init(void)
+{
+  huart1.Instance = USART2;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+
 
 /**
   * @brief System Clock Configuration

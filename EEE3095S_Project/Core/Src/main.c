@@ -18,7 +18,13 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include <stdio.h>
+#include "stm32f4xx.h"
+#include "stm32f4xx_hal.h"
+#include "lcd_stm32f4.h"
+/* USER CODE END Includes */
+#include <string.h>
+#include <stdlib.h>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -89,6 +95,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+  init_LCD();
+  lcd_command(CLEAR);
+  lcd_putstring("this is a test");
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
